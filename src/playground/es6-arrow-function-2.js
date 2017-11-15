@@ -1,5 +1,6 @@
 // argument object - no longer bound with arrow functions
 
+// count - setup default props value to 0
 const add = (a,b) => {
     return a + b;
 }
