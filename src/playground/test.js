@@ -109,9 +109,9 @@ class Test123 extends React.Component {
   
             {<strong>{this.state.result}</strong>}
             {<p>So ngay giua 2 nam: {this.state.dayOfYear}</p>}
-            {<strong>So nam giua 2 nam: { (this.state.result > 365) ? Math.round(this.state.result / 365) : 0}</strong> }
+            {<strong>So nam giua 2 nam: { (this.state.result > 365) ? Math.floor(this.state.result / 365) : 0}</strong> }
             {<p>So ngay giua 2 thang: {this.state.dayOfMonth}</p>}
-            {<strong>So thang giua 2 thang: {((this.state.result > 31)) ? Math.round(this.state.result / 31) : 0}</strong>}
+            {<strong>So thang giua 2 thang: {((this.state.result > 31)) ? Math.floor(this.state.result / 31) : 0}</strong>}
             {<p>So ngay giua 2 ngay: {this.state.days}</p>}
           </form>
         </div>

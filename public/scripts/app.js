@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8,182 +8,310 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Test123 = function (_React$Component) {
-  _inherits(Test123, _React$Component);
+//stateless functional component
+// if a component just have return -> we can use stateless function to implement it
 
-  function Test123(props) {
-    _classCallCheck(this, Test123);
+var IndecitionApp = function (_React$Component) {
+  _inherits(IndecitionApp, _React$Component);
 
-    var _this = _possibleConstructorReturn(this, (Test123.__proto__ || Object.getPrototypeOf(Test123)).call(this, props));
+  function IndecitionApp(props) {
+    _classCallCheck(this, IndecitionApp);
 
-    _this.renderYear = _this.renderYear.bind(_this);
-    _this.handleString = _this.handleString.bind(_this);
-    _this.handleDaysOfYear = _this.handleDaysOfYear.bind(_this);
-    _this.handleDaysOfMonth = _this.handleDaysOfMonth.bind(_this);
-    _this.handleDaysOfDays = _this.handleDaysOfDays.bind(_this);
+    var _this = _possibleConstructorReturn(this, (IndecitionApp.__proto__ || Object.getPrototypeOf(IndecitionApp)).call(this, props));
 
+    _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
+    _this.handlePick = _this.handlePick.bind(_this);
+    _this.handleAddOption = _this.handleAddOption.bind(_this);
+    _this.handleDeleteOption = _this.handleDeleteOption.bind(_this);
     _this.state = {
-      date1: "",
-      date2: "",
-      result: 0,
-      dayOfYear: 0,
-      dayOfMonth: 0,
-      days: 0
+      options: props.options,
+      randomOption: ''
     };
     return _this;
   }
 
-  _createClass(Test123, [{
-    key: "renderYear",
-    value: function renderYear(e) {
-      e.preventDefault();
-      var date1Value = e.target.elements.date1.value;
-      var date2Value = e.target.elements.date2.value;
-
-      var year1Obj = this.handleString(date1Value);
-      var year2Obj = this.handleString(date2Value);
-
-      var daysBYears = this.handleDaysOfYear(year1Obj.years, year2Obj.years);
-      var daysBMonths = this.handleDaysOfMonth(year1Obj.months, year2Obj.months);
-      var daysBDays = this.handleDaysOfDays(year1Obj.days, year2Obj.days);
-
-      this.setState(function () {
+  _createClass(IndecitionApp, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      // component init
+      try {
+        var json = localStorage.getItem('options');
+        var options = JSON.parse(json);
+        if (options) {
+          this.setState(function () {
+            return { options: options };
+          });
+        }
+      } catch (e) {
+        // if json is not valid
+        // do nothing at all
+      }
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      // component updated
+      if (prevProps.options.length !== this.state.options.length) {
+        var json = JSON.stringify(this.state.options);
+        localStorage.setItem('options', json);
+      } // else => nothing changed
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      // changed to another component
+      console.log('componentWillUnmount');
+    }
+  }, {
+    key: 'handlePick',
+    value: function handlePick() {
+      this.setState(function (prevState) {
+        var randomNum = Math.floor(Math.random() * prevState.options.length);
+        var option = prevState.options[randomNum];
         return {
-          dayOfYear: daysBYears,
-          dayOfMonth: daysBMonths,
-          days: daysBDays,
-          result: daysBYears + daysBMonths + daysBDays
+          randomOption: option
         };
       });
     }
+
+    // handleDeleteOptions
+
   }, {
-    key: "handleDaysOfYear",
-    value: function handleDaysOfYear(year1, year2) {
-      var _daysToPlus = 0;
-      if (year1 === year2) {
-        _daysToPlus = 0;
-      } else {
-        for (var i = year1; i < year2; i++) {
-          if (this.leapYear(i)) {
-            _daysToPlus += 366;
-          } else {
-            _daysToPlus += 365;
-          }
-        }
-      }
-      return _daysToPlus;
+    key: 'handleDeleteOptions',
+    value: function handleDeleteOptions() {
+      this.setState(function () {
+        return { options: [] };
+      });
     }
   }, {
-    key: "handleDaysOfMonth",
-    value: function handleDaysOfMonth(month1, month2) {
-      console.log(month2);
-      var a = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // list days of 12 months
-      var _daysToPlus = 0;
-
-      if (month1 === month2) {
-        _daysToPlus = 0;
-      } else if (month1 < month2) {
-        for (var j = month1; j < month2; j++) {
-          _daysToPlus += a[j - 1];
-        }
-      } else if (month1 > month2) {
-        for (var i = month2; i < month1; i++) {
-          _daysToPlus -= a[i - 1];
-        }
+    key: 'handleDeleteOption',
+    value: function handleDeleteOption(optionToRemove) {
+      this.setState(function (prevState) {
+        return {
+          options: prevState.options.filter(function (option) {
+            return optionToRemove !== option;
+          })
+        };
+      });
+      //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+    }
+  }, {
+    key: 'handleAddOption',
+    value: function handleAddOption(option) {
+      if (!option) {
+        return "Enter valid value to add item";
+      } else if (this.state.options.indexOf(option) > -1) {
+        return 'this options already exists';
       }
 
-      return _daysToPlus;
+      this.setState(function (preState) {
+        return { options: preState.options.concat([option]) };
+      });
     }
-  }, {
-    key: "handleDaysOfDays",
-    value: function handleDaysOfDays(day1, day2) {
-      var _daysToPlus = 0;
-      _daysToPlus = day2 - day1;
 
-      return _daysToPlus;
-    }
-  }, {
-    key: "leapYear",
-    value: function leapYear(year) {
-      if (year % 400 === 0) return true;else if (year % 100 != 0 && year % 4 === 0) return true;
-      return false;
-    }
-  }, {
-    key: "handleString",
-    value: function handleString(str) {
-      var strResult = str.split('/');
-      var _day = Number(strResult[0]);
-      var _month = Number(strResult[1]);
-      var _year = Number(strResult[2]);
+    //handlePick -> pass down to Action and setup onClick - bind here
+    // random an option
 
-      console.log(strResult);
-      console.log(_day, _month, _year);
+  }, {
+    key: 'render',
+    value: function render() {
+      var subTitle = "Put your lif in the hands of a computer";
 
-      return {
-        days: _day,
-        months: _month,
-        years: _year
-      };
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(Header, null),
+        React.createElement(Action, { randomOption: this.state.randomOption, handlePick: this.handlePick, hasOptions: this.state.options.length > 0 }),
+        React.createElement(Options, { options: this.state.options,
+          handleDeleteOptions: this.handleDeleteOptions,
+          handleDeleteOption: this.handleDeleteOption }),
+        React.createElement(AddOption, {
+          handleAddOption: this.handleAddOption })
+      );
+    }
+  }]);
+
+  return IndecitionApp;
+}(React.Component);
+
+IndecitionApp.defaultProps = {
+  options: []
+};
+
+var Header = function Header(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'h1',
+      null,
+      props.title
+    ),
+    props.subTitle && React.createElement(
+      'h2',
+      null,
+      props.subTitle
+    )
+  );
+};
+
+Header.defaultProps = {
+  title: 'Indecition'
+};
+
+var Action = function Action(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'button',
+      { onClick: props.handlePick, disabled: !props.hasOptions },
+      'Pick a random option'
+    ),
+    props.randomOption && React.createElement(
+      'p',
+      null,
+      props.randomOption
+    )
+  );
+};
+
+// Options -> Options component here
+// AddOption -> AddOption conponent here
+// setup options prop for Options component
+// Render the length of the array
+var Options = function Options(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'button',
+      { onClick: props.handleDeleteOptions },
+      'Remove All'
+    ),
+    props.options.length === 0 && React.createElement(
+      'p',
+      null,
+      'Please add an options'
+    ),
+    props.options.map(function (option) {
+      return React.createElement(Option, { key: option, optionText: option,
+        handleDeleteOption: props.handleDeleteOption });
+    })
+  );
+};
+
+// class RemoveOption extends React.Component {
+// 	handleRemoveOption() {
+// 		alert('Remove this option');
+// 	}
+// 	render() {
+// 		return (
+// 			<button onClick={this.handleRemoveOption}>x</button>
+// 		);
+// 	}
+// }
+
+// Option -> Option component here -> render it in Options
+var Option = function Option(props) {
+  return React.createElement(
+    'div',
+    null,
+    'Option: ',
+    props.optionText,
+    React.createElement(
+      'button',
+      { onClick: function onClick(e) {
+          props.handleDeleteOption(props.optionText);
+        } },
+      'x'
+    )
+  );
+};
+
+// 1. setup the form with text input and submit button
+// 2. wire up onSubmit
+// 3. handleAddOption -> fetch the value typed -> if value, then alert
+
+var AddOption = function (_React$Component2) {
+  _inherits(AddOption, _React$Component2);
+
+  function AddOption(props) {
+    _classCallCheck(this, AddOption);
+
+    var _this2 = _possibleConstructorReturn(this, (AddOption.__proto__ || Object.getPrototypeOf(AddOption)).call(this, props));
+
+    _this2.handleAddOption = _this2.handleAddOption.bind(_this2);
+    _this2.state = {
+      error: undefined
+    };
+    return _this2;
+  }
+
+  _createClass(AddOption, [{
+    key: 'handleAddOption',
+    value: function handleAddOption(e) {
+      e.preventDefault();
+      var option = e.target.elements.option.value.trim(); // trim() => remove blank space
+      var error = this.props.handleAddOption(option);
+      this.setState(function () {
+        return { error: error };
+      });
+
+      if (!error) {
+        e.target.elements.option.value = '';
+      }
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       return React.createElement(
-        "div",
+        'div',
         null,
+        this.state.error && React.createElement(
+          'p',
+          null,
+          this.state.error
+        ),
         React.createElement(
-          "form",
-          { onSubmit: this.renderYear },
-          "Date1: ",
-          React.createElement("input", { type: "text", name: "date1" }),
-          "Date2: ",
-          React.createElement("input", { type: "text", name: "date2" }),
+          'form',
+          { onSubmit: this.handleAddOption },
           React.createElement(
-            "button",
+            'h3',
             null,
-            "Render"
+            'Add Option Form: '
           ),
+          React.createElement('input', { type: 'text', name: 'option' }),
           React.createElement(
-            "strong",
+            'button',
             null,
-            this.state.result
-          ),
-          React.createElement(
-            "p",
-            null,
-            "So ngay giua 2 nam: ",
-            this.state.dayOfYear
-          ),
-          React.createElement(
-            "strong",
-            null,
-            "So nam giua 2 nam: ",
-            this.state.result > 365 ? Math.round(this.state.result / 365) : 0
-          ),
-          React.createElement(
-            "p",
-            null,
-            "So ngay giua 2 thang: ",
-            this.state.dayOfMonth
-          ),
-          React.createElement(
-            "strong",
-            null,
-            "So thang giua 2 thang: ",
-            this.state.result > 31 ? Math.round(this.state.result / 31) : 0
-          ),
-          React.createElement(
-            "p",
-            null,
-            "So ngay giua 2 ngay: ",
-            this.state.days
+            'Add Option'
           )
         )
       );
     }
   }]);
 
-  return Test123;
+  return AddOption;
 }(React.Component);
 
-ReactDOM.render(React.createElement(Test123, null), document.getElementById('app'));
+var User = function User(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'p',
+      null,
+      'Name: ',
+      props.name
+    ),
+    React.createElement(
+      'p',
+      null,
+      'Age: ',
+      props.age
+    )
+  );
+};
+
+ReactDOM.render(React.createElement(IndecitionApp, null), document.getElementById('app'));
