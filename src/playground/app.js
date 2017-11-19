@@ -10,7 +10,7 @@ class IndecitionApp extends React.Component {
     this.handleDeleteOption = this.handleDeleteOption.bind(this);
     this.state = {
       options: props.options,
-      randomOption: ''
+      selectedOption: ''
     }
 	}
 
@@ -43,7 +43,7 @@ class IndecitionApp extends React.Component {
       const randomNum = Math.floor(Math.random() * prevState.options.length);
       const option = prevState.options[randomNum];
       return {
-        randomOption: option
+        selectedOption: option
       }
     });
   }
@@ -81,7 +81,7 @@ class IndecitionApp extends React.Component {
 		return (
 			<div>
 				<Header/>
-				<Action randomOption={this.state.randomOption} handlePick={this.handlePick} hasOptions={this.state.options.length > 0}/>
+				<Action selectedOption={this.state.selectedOption} handlePick={this.handlePick} hasOptions={this.state.options.length > 0}/>
 				<Options options={this.state.options} 
         handleDeleteOptions={this.handleDeleteOptions} 
         handleDeleteOption = {this.handleDeleteOption}/>
@@ -115,7 +115,7 @@ const Action = (props) => {
       <button onClick={props.handlePick} disabled = {!props.hasOptions}>
         Pick a random option
       </button>
-      {props.randomOption && <p>{props.randomOption}</p>}
+      {props.selectedOption && <p>{props.selectedOption}</p>}
     </div>
   );
 }
