@@ -2,8 +2,8 @@ import React from 'react';
 
 const Action = (props) => (
   <div>
-    <button onClick={props.handlePick} disabled = {!props.hasOptions}>
-      Pick a random option
+    <button className="big-button" onClick={props.handlePick} disabled = {!props.hasOptions}>
+      What should I do?
     </button>
     {props.selectedOption && <p>{props.selectedOption}</p>}
   </div>

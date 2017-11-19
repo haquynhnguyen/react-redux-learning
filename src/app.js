@@ -2,16 +2,8 @@
 import react from 'react';
 import reactDOM from 'react-dom';
 import IndecitionApp from './components/IndecitionApp';
-
-const Layout = (props) => {
-    return (
-        <div>
-            <p>header</p>
-            {props.children}
-            <p>footer</p>
-        </div>
-    );
-}
+import 'normalize.css/normalize.css';
+import './styles/styles.scss';
 
 ReactDOM.render((
   <IndecitionApp />
